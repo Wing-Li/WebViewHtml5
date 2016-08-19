@@ -29,15 +29,27 @@ public class MainActivity extends AppCompatActivity {
         mBtnSreach.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mUrl = mTxtHost.getText().toString() + mEdtUrl.getText().toString().trim();
+                String edt = mEdtUrl.getText().toString().trim();
+                mUrl = mTxtHost.getText().toString() + edt;
                 Intent intent = new Intent(MainActivity.this, Html5Activity.class);
-                if (!TextUtils.isEmpty(mUrl)) {
+                if (!TextUtils.isEmpty(edt)) {
                     Bundle bundle = new Bundle();
                     bundle.putString("url", mUrl);
                     intent.putExtra("bundle", bundle);
                 }
                 startActivity(intent);
+            }
+        });
 
+        mTxtHost.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String host = mTxtHost.getText().toString().trim();
+                if (host.startsWith("https")){
+                    mTxtHost.setText("http://");
+                }else {
+                    mTxtHost.setText("https://");
+                }
             }
         });
     }

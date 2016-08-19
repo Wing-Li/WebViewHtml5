@@ -4,7 +4,6 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.ViewGroup;
@@ -32,9 +31,7 @@ public class Html5Activity extends AppCompatActivity {
         Bundle bundle = getIntent().getBundleExtra("bundle");
         if (bundle != null) {
             mUrl = bundle.getString("url");
-        }
-
-        if (!TextUtils.isEmpty(mUrl) && "http://".equals(mUrl)) {
+        }else {
             mUrl = "https://wing-li.github.io/";
         }
 
@@ -53,8 +50,10 @@ public class Html5Activity extends AppCompatActivity {
         mWebSettings.setDefaultTextEncodingName("utf-8");
         mWebSettings.setLoadsImagesAutomatically(true);
 
+
         //调用JS方法.安卓版本大于17,加上注解 @JavascriptInterface
         mWebSettings.setJavaScriptEnabled(true);
+        mWebSettings.setSupportMultipleWindows(true);
 
         //缓存数据
         saveData(mWebSettings);
@@ -135,9 +134,9 @@ public class Html5Activity extends AppCompatActivity {
         //=========多窗口的问题==========================================================
         @Override
         public boolean onCreateWindow(WebView view, boolean isDialog, boolean isUserGesture, Message resultMsg) {
-            WebView.WebViewTransport transport = (WebView.WebViewTransport) resultMsg.obj;
-            transport.setWebView(mWebView);
-            resultMsg.sendToTarget();
+            WebView.HitTestResult result = view.getHitTestResult();
+            String data = result.getExtra();
+            mWebView.loadUrl(data);
             return true;
         }
         //=========多窗口的问题==========================================================

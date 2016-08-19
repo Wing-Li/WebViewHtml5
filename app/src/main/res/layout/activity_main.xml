@@ -17,7 +17,7 @@
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/edt_url"
         android:layout_marginBottom="9dp"
-        android:text="http://"
+        android:text="https://"
         android:textSize="18sp"/>
 
     <EditText
