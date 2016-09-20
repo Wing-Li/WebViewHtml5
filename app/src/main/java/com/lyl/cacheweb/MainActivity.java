@@ -4,7 +4,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -29,15 +31,17 @@ public class MainActivity extends AppCompatActivity {
         mBtnSreach.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String edt = mEdtUrl.getText().toString().trim();
-                mUrl = mTxtHost.getText().toString() + edt;
-                Intent intent = new Intent(MainActivity.this, Html5Activity.class);
-                if (!TextUtils.isEmpty(edt)) {
-                    Bundle bundle = new Bundle();
-                    bundle.putString("url", mUrl);
-                    intent.putExtra("bundle", bundle);
+                sreachUrl();
+            }
+        });
+
+        mEdtUrl.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    sreachUrl();
                 }
-                startActivity(intent);
+                return false;
             }
         });
 
@@ -45,12 +49,29 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String host = mTxtHost.getText().toString().trim();
-                if (host.startsWith("https")){
+                if (host.startsWith("https")) {
                     mTxtHost.setText("http://");
-                }else {
+                } else {
                     mTxtHost.setText("https://");
                 }
             }
         });
+    }
+
+    private void sreachUrl() {
+        String edt = mEdtUrl.getText().toString().trim();
+        if (edt.startsWith("https") || edt.startsWith("http")) {
+            mUrl = edt;
+        } else {
+            mUrl = mTxtHost.getText().toString() + edt;
+        }
+
+        Intent intent = new Intent(MainActivity.this, Html5Activity.class);
+        if (!TextUtils.isEmpty(edt)) {
+            Bundle bundle = new Bundle();
+            bundle.putString("url", mUrl);
+            intent.putExtra("bundle", bundle);
+        }
+        startActivity(intent);
     }
 }

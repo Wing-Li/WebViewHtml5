@@ -3,6 +3,8 @@ package com.lyl.cacheweb;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.webkit.WebView;
@@ -39,6 +41,24 @@ public class Html5Activity extends AppCompatActivity {
         mWebView.loadUrl(mUrl);
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        int itemId = item.getItemId();
+        switch (itemId) {
+            case R.id.close:
+                Html5Activity.this.finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     private long mOldTime;
 
     @Override
@@ -49,6 +69,8 @@ public class Html5Activity extends AppCompatActivity {
                 mWebView.loadUrl(mUrl);
             } else if (mWebView.canGoBack()) {
                 mWebView.goBack();
+            } else {
+                Html5Activity.this.finish();
             }
             mOldTime = System.currentTimeMillis();
             return true;
