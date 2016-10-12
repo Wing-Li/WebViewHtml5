@@ -57,7 +57,7 @@ public class Html5WebView extends WebView {
     private void newWin(WebSettings mWebSettings) {
         //html中的_bank标签就是新建窗口打开，有时会打不开，需要加以下
         //然后 复写 WebChromeClient的onCreateWindow方法
-        mWebSettings.setSupportMultipleWindows(true);
+        mWebSettings.setSupportMultipleWindows(false);
         mWebSettings.setJavaScriptCanOpenWindowsAutomatically(true);
     }
 
@@ -120,9 +120,9 @@ public class Html5WebView extends WebView {
         //=========多窗口的问题==========================================================
         @Override
         public boolean onCreateWindow(WebView view, boolean isDialog, boolean isUserGesture, Message resultMsg) {
-            WebView.HitTestResult result = view.getHitTestResult();
-            String data = result.getExtra();
-            view.loadUrl(data);
+            WebView.WebViewTransport transport = (WebView.WebViewTransport) resultMsg.obj;
+            transport.setWebView(view);
+            resultMsg.sendToTarget();
             return true;
         }
         //=========多窗口的问题==========================================================
