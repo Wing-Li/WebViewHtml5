@@ -11,6 +11,8 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import java.io.File;
+
 /**
  * Wing_Li
  * 2016/9/9.
@@ -72,12 +74,14 @@ public class Html5WebView extends WebView {
         } else {
             mWebSettings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);//没网，则从本地获取，即离线加载
         }
-
-        mWebSettings.setDomStorageEnabled(true);
-        mWebSettings.setDatabaseEnabled(true);
-        mWebSettings.setAppCacheEnabled(true);
-        String appCachePath = mContext.getCacheDir().getAbsolutePath();
-        mWebSettings.setAppCachePath(appCachePath);
+        File cacheDir = mContext.getCacheDir();
+        if (cacheDir != null){
+            String appCachePath  = cacheDir.getAbsolutePath();
+            mWebSettings.setDomStorageEnabled(true);
+            mWebSettings.setDatabaseEnabled(true);
+            mWebSettings.setAppCacheEnabled(true);
+            mWebSettings.setAppCachePath(appCachePath);
+        }
     }
 
     WebViewClient webViewClient = new WebViewClient() {
