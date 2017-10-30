@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Message;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.webkit.GeolocationPermissions;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
@@ -49,8 +48,8 @@ public class Html5WebView extends WebView {
         //缓存数据
         saveData(mWebSettings);
         newWin(mWebSettings);
-        setWebChromeClient(webChromeClient);
-        setWebViewClient(webViewClient);
+        setWebChromeClient(new BaseWebChromeClient());
+        setWebViewClient(new BaseWebViewClient());
     }
 
     /**
@@ -75,8 +74,8 @@ public class Html5WebView extends WebView {
             mWebSettings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);//没网，则从本地获取，即离线加载
         }
         File cacheDir = mContext.getCacheDir();
-        if (cacheDir != null){
-            String appCachePath  = cacheDir.getAbsolutePath();
+        if (cacheDir != null) {
+            String appCachePath = cacheDir.getAbsolutePath();
             mWebSettings.setDomStorageEnabled(true);
             mWebSettings.setDatabaseEnabled(true);
             mWebSettings.setAppCacheEnabled(true);
@@ -84,20 +83,25 @@ public class Html5WebView extends WebView {
         }
     }
 
-    WebViewClient webViewClient = new WebViewClient() {
+    /**
+     * 实现一个基础的 WebViewClient ，如果有更多的需要，直接继承它
+     */
+    static class BaseWebViewClient extends WebViewClient {
+
         /**
          * 多页面在同一个WebView中打开，就是不新建activity或者调用系统浏览器打开
          */
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
             view.loadUrl(url);
-            Log.d("Url:", url);
             return true;
         }
-    };
+    }
 
-    WebChromeClient webChromeClient = new WebChromeClient() {
-
+    /**
+     * 实现一个基础的 WebChromeClient ，如果有更多的需要，直接继承它
+     */
+    static class BaseWebChromeClient extends WebChromeClient {
         //=========HTML5定位==========================================================
         //需要先加入权限
         //<uses-permission android:name="android.permission.INTERNET"/>
@@ -114,7 +118,8 @@ public class Html5WebView extends WebView {
         }
 
         @Override
-        public void onGeolocationPermissionsShowPrompt(final String origin, final GeolocationPermissions.Callback callback) {
+        public void onGeolocationPermissionsShowPrompt(final String origin, final GeolocationPermissions.Callback
+                callback) {
             callback.invoke(origin, true, false);//注意个函数，第二个参数就是是否同意定位权限，第三个是是否希望内核记住
             super.onGeolocationPermissionsShowPrompt(origin, callback);
         }
@@ -130,5 +135,7 @@ public class Html5WebView extends WebView {
             return true;
         }
         //=========多窗口的问题==========================================================
-    };
+    }
+
 }
+

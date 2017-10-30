@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">WebApp</string>
+
+    <string name="hint">此APP使用提示：\n\n1. 点击前面 “https://” 切换 http ；\n2. 您输入了“http”也可以正常访问；\n3. 在网页中，点击“实体返回键”，返回上一层；\n4. 在网页中，双击“返回键”，返回到最开始进来时的网页；\n5. 在网页中，按“目录键”，弹出“复制网址”和“关闭页面”的选项； </string>
 </resources>
